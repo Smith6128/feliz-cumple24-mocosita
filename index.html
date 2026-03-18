@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>¡Feliz 24 Cumpleaños Mi Niña! 🎂✨</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300&display=swap');
+
+    html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: 'Poppins', sans-serif; }
+    
+    /* PANTALLA DE INICIO */
+    #welcome-screen {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(circle, #1a0033 0%, #000 100%);
+      transition: opacity 1.5s ease;
+      text-align: center; color: white; padding: 20px;
+    }
+
+    #welcome-screen img {
+      max-width: 80%; max-height: 35vh; border-radius: 20px;
+      margin-bottom: 20px; box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+      object-fit: cover;
+    }
+
+    .poem-container p { font-style: italic; line-height: 1.6; font-size: 1.1rem; color: #fff3d0; white-space: pre-line; margin-bottom: 20px; text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+
+    /* MODAL INTERACTIVO */
+    #question-modal {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.98);
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a2e; border: 3px solid #ffd700; padding: 50px;
+      border-radius: 30px; text-align: center; width: 85%; max-width: 500px;
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.4);
+    }
+    .btn-group { margin-top: 50px; height: 120px; position: relative; width: 100%; }
+    
+    .yes-btn {
+      padding: 18px 50px; border-radius: 60px; border: none; cursor: pointer;
+      background: linear-gradient(45deg, #ffd700, #ffea00); color: #000; font-weight: bold; font-size: 1.5rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+    }
+    .yes-btn:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 215, 0, 0.7); }
+
+    .no-btn {
+      padding: 12px 30px; border-radius: 60px; border: none; cursor: pointer;
+      background: #f44336; color: white; font-weight: bold; font-size: 1.1rem;
+      position: absolute; left: 50%; transform: translateX(50%);
+      transition: all 0.2s ease-out;
+    }
+
+    /* ESCENA DEL PASTEL INTERACTIVO (Como el código original) */
+    #cake-scene {
+      position: fixed; inset: 0; z-index: 3000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(circle, #2a004d 0%, #000 100%);
+      color: white; text-align: center;
+    }
+
+    #cake-container {
+      position: relative; width: 300px; height: 350px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    }
+
+    #cake-svg {
+      width: 250px; height: auto;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 15px rgba(255, 100, 200, 0.5));
+    }
+
+    #number-24-svg {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 200px; height: 150px;
+    }
+
+    .candle {
+      position: absolute; width: 12px; height: 12px;
+      background-color: #555;
+      border-radius: 50%;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    }
+
+    .candle.lit {
+      background-color: #ffea00;
+      box-shadow: 0 0 15px #ffea00, 0 0 25px #ff8800, 0 0 35px #ff4400;
+      transform: scale(1.2);
+    }
+
+    /* MENSAJE DE CELEBRACIÓN */
+    #thanks-msg {
+      position: fixed; inset: 0; z-index: 4000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.9); color: #fff; text-align: center;
+    }
+    #thanks-msg h2 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.8); }
+
+    .party-item {
+      position: fixed; top: -60px; z-index: 3500;
+      font-size: 45px; pointer-events: none;
+      animation: fall linear forwards;
+    }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+    /* UI DEL PASTEL CÓSMICO (NUEVO UNIVERSO) */
+    #cake-galaxy-ui { display:none; }
+    #cake-galaxy-canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+
+    .pill {
+      position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+      padding: 10px 25px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      color: #fff; font-size: 14px; z-index: 10;
+      text-align: center; width: auto; max-width: 85%;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .player {
+      position: fixed; left: 15px; right: 15px; bottom: 15px;
+      display: flex; gap: 10px; align-items: center;
+      background: rgba(30, 20, 50, 0.7);
+      border-radius: 15px; padding: 10px 15px;
+      backdrop-filter: blur(10px); color: #fff; z-index: 20;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<div id="welcome-screen">
+  <img src="foto.jpeg.jpeg" alt="Feliz 24 Primaveras"> 
+  <div class="poem-container">
+    <p>
+      Veinticuatro primaveras de luz y alegría,
+      hoy es un dia muy especial y estoy muy feliz de ti.
+      Eres la estrella que guía mi camino,
+      mi amor eterno, mi dulce destino.
+
+      Pide un deseo antes de cruzar,
+      que este dia sea lleno de magia y algo lindo te espera al pasar Te amo.
+    </p>
+  </div>
+  <button class="yes-btn" onclick="document.getElementById('question-modal').style.display='flex'">Encender la Magia ✨</button>
+</div>
+
+<div id="question-modal">
+  <div class="modal-content">
+    <h2 style="color: #ffd700; font-family: 'Dancing Script'; font-size: 3rem; text-shadow: 0 0 15px rgba(255,215,0,0.6);">¿Estás lista para celebrar tus 24? 🎂</h2>
+    <div class="btn-group">
+      <button class="yes-btn" id="yes-btn">¡SÍ! 🎉</button>
+      <button class="no-btn" id="no-btn">No</button>
+    </div>
+  </div>
+</div>
+
+<div id="cake-scene">
+  <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: #ffd700; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,215,0,0.5);">¡Pide un deseo! 🕯️</h2>
+  <div id="cake-container">
+    <svg id="cake-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#ff99cc;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#ff3399;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="50" cy="80" rx="40" ry="15" fill="#ddd" />
+      <rect x="20" y="45" width="60" height="30" rx="5" ry="5" fill="url(#cakeGrad)" />
+      <rect x="10" y="65" width="80" height="25" rx="5" ry="5" fill="url(#cakeGrad)" />
+      <path d="M10,65 Q20,55 30,65 T50,65 T70,65 T90,65" fill="none" stroke="white" stroke-width="3" />
+      <path d="M20,45 Q30,35 40,45 T60,45 T80,45" fill="none" stroke="white" stroke-width="3" />
+    </svg>
+    <div id="number-24-svg"></div>
+  </div>
+</div>
+
+<div id="thanks-msg">
+  <h2>¡Feliz Cumpleaños # 24 Mi Niña! ❤️<br>¡Que todos tus deseos se cumplan! ✨</h2>
+</div>
+
+<div id="cake-galaxy-ui">
+  <canvas id="cake-galaxy-canvas"></canvas>
+  <div class="pill">✨ ¡Feliz Cumpleaños #24 Mocosita Hermosa! Eres mi universo favorito ♾️🎂</div>
+  <div class="player">
+    <button id="playBtn" style="background:none; border:2px solid #fff; color:#fff; border-radius:10px; cursor:pointer; font-size: 1.2rem; padding: 5px 10px;">⏸︎</button>
+    <span style="font-size:14px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">Sonando: <b>Tu Canción Favorita</b> 🎶</span>
+    <audio id="audio" loop>
+      <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</div>
+
+<script>
+(function(){
+  const noBtn = document.getElementById('no-btn');
+  const yesBtn = document.getElementById('yes-btn');
+  const welcomeScreen = document.getElementById('welcome-screen');
+  const questionModal = document.getElementById('question-modal');
+  const cakeScene = document.getElementById('cake-scene');
+  const thanksMsg = document.getElementById('thanks-msg');
+  const cakeGalaxyUi = document.getElementById('cake-galaxy-ui');
+  const audio = document.getElementById('audio');
+  let noScale = 1;
+
+  // LÓGICA BOTÓN "NO"
+  const moveNo = () => {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 50);
+    noScale -= 0.1;
+    if(noScale < 0.2) noScale = 0.2;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    noBtn.style.transform = `scale(${noScale})`;
+  };
+  noBtn.onmouseover = moveNo;
+  noBtn.onclick = moveNo;
+
+  // LÓGICA BOTÓN "SÍ"
+  yesBtn.onclick = () => {
+    audio.play().catch(e => console.log("Audio block:", e));
+    
+    questionModal.style.opacity = '0';
+    welcomeScreen.style.opacity = '0';
+    setTimeout(() => {
+      questionModal.style.display = 'none';
+      welcomeScreen.style.display = 'none';
+      startCakeScene();
+    }, 1000);
+  };
+
+  // --- ESCENA DEL PASTEL INTERACTIVO (Como el código original) ---
+  function startCakeScene() {
+    cakeScene.style.display = 'flex';
+    createCandles();
+    setTimeout(lightCandlesOneByOne, 1000);
+  }
+
+  function createCandles() {
+    const number24Container = document.getElementById('number-24-svg');
+    const points = [
+      {x: 10, y: 20}, {x: 20, y: 15}, {x: 30, y: 15}, {x: 40, y: 20}, {x: 45, y: 30},
+      {x: 40, y: 40}, {x: 30, y: 50}, {x: 20, y: 60}, {x: 10, y: 70}, {x: 10, y: 80},
+      {x: 20, y: 85}, {x: 30, y: 85}, {x: 40, y: 85}, {x: 48, y: 80},
+      {x: 65, y: 15}, {x: 60, y: 25}, {x: 55, y: 35}, {x: 52, y: 45},
+      {x: 60, y: 48}, {x: 70, y: 48}, {x: 80, y: 48}, {x: 88, y: 48},
+      {x: 80, y: 35}, {x: 80, y: 60}, {x: 80, y: 75}, {x: 80, y: 85}
+    ];
+    const totalCandles = Math.min(points.length, 24); 
+
+    for(let i=0; i<totalCandles; i++) {
+      const candle = document.createElement('div');
+      candle.className = 'candle';
+      candle.id = `candle-${i}`;
+      candle.style.left = points[i].x + '%';
+      candle.style.top = points[i].y + '%';
+      number24Container.appendChild(candle);
+    }
+  }
+
+  function lightCandlesOneByOne() {
+    let index = 0;
+    const interval = setInterval(() => {
+      const candle = document.getElementById(`candle-${index}`);
+      if(candle) candle.classList.add('lit');
+      index++;
+      if(index >= 24) {
+        clearInterval(interval);
+        setTimeout(transitionToGalaxy, 2000); 
+      }
+    }, 100); 
+  }
+
+  function transitionToGalaxy() {
+    cakeScene.style.opacity = '0';
+    thanksMsg.style.display = 'flex';
+    createPartyRain();
+
+    setTimeout(() => {
+      thanksMsg.style.opacity = '0';
+      setTimeout(() => {
+        cakeScene.style.display = 'none';
+        thanksMsg.style.display = 'none';
+        cakeGalaxyUi.style.display = 'block';
+        initCakeCosmosEngine(); // INICIA EL MOTOR DEL PASTEL CÓSMICO
+      }, 1000);
+    }, 4000);
+  }
+
+  function createPartyRain() {
+    const items = ['🎂', '🎈', '🎉', '✨', '🥳', '🎁', '🕯️'];
+    for(let i=0; i<80; i++) {
+      setTimeout(() => {
+        const item = document.createElement('div');
+        item.className = 'party-item';
+        item.innerHTML = items[Math.floor(Math.random() * items.length)];
+        item.style.left = Math.random() * 100 + 'vw';
+        item.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(item);
+        setTimeout(() => item.remove(), 4000);
+      }, i * 60);
+    }
+  }
+
+  // --- MOTOR DEL PASTEL CÓSMICO (Three.js) ---
+  function initCakeCosmosEngine() {
+    const canvas = document.getElementById('cake-galaxy-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    camera.position.set(0, 35, 125); // Ajuste de cámara
+
+    // --- FONDO NEBULOSO COLORIDO ---
+    function makeVibrantCakeCosmosTexture(size=1024, count=3500) {
+      const c = document.createElement('canvas'); c.width = c.height = size;
+      const g = c.getContext('2d');
+      const r = size/2;
+      const bg = g.createRadialGradient(r,r, r*0.1, r,r, r);
+      bg.addColorStop(0,'#2d004d');   bg.addColorStop(0.4,'#100a3e'); bg.addColorStop(0.7,'#4d0039'); bg.addColorStop(1,'#000005');
+      g.fillStyle = bg; g.fillRect(0,0,size,size);
+      for(let j=0; j<8; j++) {
+        const nx = Math.random()*size, ny = Math.random()*size;
+        const nGrad = g.createRadialGradient(nx,ny,0, nx,ny, Math.random()*r*0.6 + r*0.3);
+        const col = Math.random() > 0.5 ? 'rgba(255, 100, 220, 0.2)' : 'rgba(100, 220, 255, 0.2)';
+        nGrad.addColorStop(0, col); nGrad.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = nGrad; g.fillRect(0,0,size,size);
+      }
+      for (let i=0;i<count;i++) {
+        const x = Math.random()*size, y = Math.random()*size;
+        const isGold = Math.random() > 0.8;
+        const isBright = Math.random() > 0.96;
+        const sSize = isBright ? Math.random()*2.2+1.2 : Math.random()*1+0.3;
+        const col = isGold ? 'rgba(255, 215, 0, 0.9)' : (Math.random() > 0.6 ? 'rgba(180, 220, 255, 0.8)' : 'rgba(255, 255, 255, 0.9)');
+        const glow = g.createRadialGradient(x,y,0, x,y, sSize*(isBright?3.5:1.8));
+        glow.addColorStop(0, col); glow.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = glow; g.beginPath(); g.arc(x,y, sSize, 0, Math.PI*2); g.fill();
+      }
+      return new THREE.CanvasTexture(c);
+    }
+
+    const spaceTex = makeVibrantCakeCosmosTexture();
+    const bg = new THREE.Mesh(new THREE.SphereGeometry(700, 64, 64), new THREE.MeshBasicMaterial({ map: spaceTex, side: THREE.BackSide }));
+    scene.add(bg);
+
+    const cosmosSystem = new THREE.Group(); scene.add(cosmosSystem);
+    
+    // --- EL PASTEL 3D (Blanco y Dorado) ---
+    const cakeGroup = new THREE.Group();
+    const cakeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.1 });
+    const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.2, metalness: 0.8 });
+    
+    // Piso 1
+    const tier1 = new THREE.Mesh(new THREE.CylinderGeometry(25, 25, 20, 64), cakeMat);
+    tier1.position.y = 10; cakeGroup.add(tier1);
+    const tier1Trim = new THREE.Mesh(new THREE.TorusGeometry(25, 1, 16, 100), goldMat);
+    tier1Trim.rotation.x = Math.PI/2; tier1Trim.position.y = 20; cakeGroup.add(tier1Trim);
+
+    // Piso 2
+    const tier2 = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 18, 64), cakeMat);
+    tier2.position.y = 29; cakeGroup.add(tier2);
+    const tier2Trim = new THREE.Mesh(new THREE.TorusGeometry(18, 0.8, 16, 100), goldMat);
+    tier2Trim.rotation.x = Math.PI/2; tier2Trim.position.y = 38; cakeGroup.add(tier2Trim);
+
+    // Piso 3
+    const tier3 = new THREE.Mesh(new THREE.CylinderGeometry(12, 12, 16, 64), cakeMat);
+    tier3.position.y = 46; cakeGroup.add(tier3);
+    const tier3Trim = new THREE.Mesh(new THREE.TorusGeometry(12, 0.6, 16, 100), goldMat);
+    tier3Trim.rotation.x = Math.PI/2; tier3Trim.position.y = 54; cakeGroup.add(tier3Trim);
+
+    cosmosSystem.add(cakeGroup);
+
+    // --- CORRECCIÓN: NÚMERO '24' 3D EN LA CIMA (MÁS VISIBLE) ---
+    const numMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.1 });
+    const numGroup = new THREE.Group();
+
+    // Geometría para el número 2
+    const createNumber2 = () => {
+        const group = new THREE.Group();
+        // Parte superior curva
+        const top = new THREE.Mesh(new THREE.TorusGeometry(4, 1.2, 16, 30, Math.PI), numMat);
+        top.position.set(-5, 63, 0); top.rotation.z = Math.PI/2; group.add(top);
+        // Diagonal
+        const slant = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 9, 16), numMat);
+        slant.position.set(-2, 59.5, 0); slant.rotation.z = -Math.PI/6; group.add(slant);
+        // Base horizontal
+        const bot = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 8, 16), numMat);
+        bot.position.set(-2, 55, 0); bot.rotation.z = Math.PI/2; group.add(bot);
+        return group;
+    };
+
+    // Geometría para el número 4
+    const createNumber4 = () => {
+        const group = new THREE.Group();
+        // Vertical larga
+        const vert1 = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 10, 16), numMat);
+        vert1.position.set(6, 59.5, 0); group.add(vert1);
+        // Diagonal corta
+        const slant = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 7.5, 16), numMat);
+        slant.position.set(3, 61, 0); slant.rotation.z = Math.PI/6; group.add(slant);
+        // Horizontal corta
+        const horiz = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 6, 16), numMat);
+        horiz.position.set(4.2, 58, 0); horiz.rotation.z = Math.PI/2; group.add(horiz);
+        return group;
+    };
+
+    numGroup.add(createNumber2());
+    numGroup.add(createNumber4());
+    
+    // Asegurar que el número no rote independientemente del pastel
+    numGroup.rotation.y = 0; 
+    cakeGroup.add(numGroup); 
+
+
+    // --- VELITAS ENCENDIDAS (GIRANDO CON EL PASTEL) ---
+    // Usamos AdditiveBlending para que brillen
+    const candleLightMat = new THREE.PointsMaterial({ color: 0xffea00, size: 2.8, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
+    const candleGeom = new THREE.BufferGeometry();
+    const candlePos = new Float32Array(24 * 3);
+    for(let i=0; i<24; i++) {
+        const tier = i < 12 ? 1 : (i < 20 ? 2 : 3);
+        const r = tier === 1 ? 23 : (tier === 2 ? 16 : 10);
+        const y = tier === 1 ? 22 : (tier === 2 ? 40 : 56);
+        const ang = (i / (tier === 1 ? 12 : (tier === 2 ? 8 : 4))) * Math.PI * 2;
+        candlePos[i*3] = Math.cos(ang) * r;
+        candlePos[i*3+1] = y; // Posición base de la llama
+        candlePos[i*3+2] = Math.sin(ang) * r;
+    }
+    candleGeom.setAttribute('position', new THREE.BufferAttribute(candlePos, 3));
+    const candles = new THREE.Points(candleGeom, candleLightMat);
+    // IMPORTANTE: Las velitas se añaden a cakeGroup para que giren con él
+    cakeGroup.add(candles); 
+
+
+    // --- ILUMINACIÓN DEL PASTEL ---
+    const cakeLight = new THREE.PointLight(0xfff3d0, 1.8, 120);
+    cakeLight.position.set(0, 80, 0); cakeGroup.add(cakeLight);
+    scene.add(new THREE.AmbientLight(0x505050));
+
+
+    // --- FRASES GIRATORIAS (Como en la imagen) ---
+    const phrases = ["Pinchecha ✨", "Hermosa ❤️", "Mi Bebe 💜", "Mi Cielito 🌌", "Hermosota ✨", "Mi Infinito ♾️", "Me Encantas 🥰", "Perla 💫", "Te Amo ❤️", "Mi Canción Favorita 🎶", "Única 😊", "Mi Reina 👑", "Mi Amor", "Mi Mundo", "Mi Luz 🌠", "Mi Niña", "Mi Tesoro ❤️", "Mi Paz", "Mi Eterna", "Mi Pensamiento Favorito", "Mi Bombom", "Mi Diosa", "Te adimro mucho", "Eres una mujer Maravillosa", "Te Amo Infinitamente mi amor eterno ♾️"];
+    
+    function makeVibrantTextTexture(text){
+      const c=document.createElement('canvas'); c.width=1024; c.height=128;
+      const g=c.getContext('2d'); g.font='800 60px Arial'; g.textAlign='center'; g.textBaseline='middle';
+      g.shadowColor='rgba(255, 215, 0, 0.98)'; g.shadowBlur=32;
+      g.fillStyle='white'; g.fillText(text,512,64);
+      return new THREE.CanvasTexture(c);
+    }
+
+    const arms = 5, radius = 95, phraseCount = 200;
+    for(let i=0;i<phraseCount;i++){ 
+      const spr=new THREE.Sprite(new THREE.SpriteMaterial({ map:makeVibrantTextTexture(phrases[i%phrases.length]), transparent:true, depthWrite:false }));
+      const perArm=phraseCount/arms; const ang=(i%perArm)*(Math.PI*2/perArm);
+      const armAng=Math.floor(i/perArm)*(Math.PI*2/arms);
+      const dist=Math.pow(i/phraseCount,0.72)*radius + 28;
+      const x=Math.cos(ang+armAng)*dist, z=Math.sin(ang+armAng)*dist, y=(Math.random()-0.5)*28*Math.pow(1-(dist/radius),2) + 30;
+      spr.position.set(x,y,z); spr.scale.set(24,3,1);
+      cosmosSystem.add(spr);
+    }
+
+    // Polvo cósmico dorado
+    const dustCount=10000, dustGeom=new THREE.BufferGeometry(), dustPos=new Float32Array(dustCount*3);
+    for(let i=0;i<dustCount;i++){ 
+      const ang=Math.random()*Math.PI*2, dist=Math.random()*radius*1.2 + 30;
+      dustPos[i*3]=Math.cos(ang)*dist; dustPos[i*3+1]=(Math.random()-0.5)*40*Math.pow(1-dist/radius,1.5) + 30; dustPos[i*3+2]=Math.sin(ang)*dist; 
+    }
+    dustGeom.setAttribute('position', new THREE.BufferAttribute(dustPos,3));
+    cosmosSystem.add(new THREE.Points(dustGeom, new THREE.PointsMaterial({ color:0xffd700, size:0.35, transparent:true, opacity:0.8, blending:THREE.AdditiveBlending })));
+
+
+    function animate(){
+      requestAnimationFrame(animate);
+      const t = performance.now()*0.001;
+      
+      // El pastel y las velitas (fijas a él) giran
+      cakeGroup.rotation.y = t * 0.15; // Velocidad de giro del pastel
+      
+      // El sistema entero de frases y polvo gira (más lento)
+      cosmosSystem.rotation.y = t * 0.05;
+
+      // Efecto de llama temblorosa en las velitas (fijo sobre el giro)
+      const candlePositions = candles.geometry.attributes.position.array;
+      for(let i=0; i<24; i++) {
+          // La altura base es fija (y=22, 40, 56) + temblor
+          const tier = i < 12 ? 22 : (i < 20 ? 40 : 56);
+          candlePositions[i*3+1] = tier + (Math.random()-0.5) * 0.15;
+      }
+      candles.geometry.attributes.position.needsUpdate = true;
+
+      controls.update();
+      renderer.render(scene, camera);
+    } animate();
+  }
+
+  // BOTÓN PLAY/PAUSE
+  document.getElementById('playBtn').onclick = function(){
+    if(audio.paused){ audio.play(); this.textContent='⏸︎'; }
+    else { audio.pause(); this.textContent='▶︎'; }
+  };
+})();
+</script>
+</body>
+</html>
